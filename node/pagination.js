@@ -1,6 +1,6 @@
 var exp = require('express');
-//var mongo = require('./mongo.js');
-var MongoClient = require('mongodb').MongoClient;
+var mongo = require('./mongo.js');
+//var MongoClient = require('mongodb').MongoClient;
 var app = exp();
 
 // Debug code start
@@ -19,20 +19,20 @@ app.get('/enquires',function(req,res){
     query.limit = size
     // Find some documents
 
-    // mongo.find({name:"Florry"},function(err,data) {
-    //     // Mongo command to fetch all data from collection.
-    //         if(err) {
-    //             console.log("err : "+err);
-    //             response = {"error" : true,"message" : "Error fetching data"};
-    //         } else {
-    //             console.log("data : "+data);
-    //             response = {"error" : false,"message" : data};
-    //         }
-    //         res.json(response);
-    // });
+     mongo.find({},'name email contact comments',query,function(err,data) {
+         // Mongo command to fetch all data from collection.
+             if(err) {
+                 console.log("err : "+err);
+                 response = {"error" : true,"message" : "Error fetching data"};
+             } else {
+                 console.log("data : "+data);
+                 response = {"error" : false,"message" : data};
+             }
+             res.json(response);
+     });
 
 
-var url = "mongodb://localhost:27017/";
+/*var url = "mongodb://localhost:27017/";
 MongoClient.connect(url, function(err, db) {
     if (err) throw err;
     var dbo = db.db("yourdb");
@@ -47,8 +47,29 @@ MongoClient.connect(url, function(err, db) {
            res.json(response);
         db.close();
     });
-  });
-
+  });*/
 
 });
+
+app.get('/saveProfile',function(req,res){
+    var myProfile = new mongo({
+      name : "Puja",
+      email : "puja@gmail.com",
+      contact : "1347239910",
+      comments : "Maecenas rhoncus aliquam lacus. Morbi quis tortor id nulla ultrices aliquet.",
+      status : true
+    });
+    myProfile.save(function(err,data){
+      if(err){
+          console.log("err : "+err);
+          response = {"error" : true,"message" : "Error Saving data"};
+      }
+      else{
+          console.log("data : "+data);
+          response = {"error" : false,"message" : data};
+      }
+      res.json(response);
+  });
+});
+
 app.listen(3000);
