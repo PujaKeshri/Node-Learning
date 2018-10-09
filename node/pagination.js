@@ -19,7 +19,7 @@ app.get('/enquires',function(req,res){
     query.limit = size
     // Find some documents
 
-     mongo.find({},'name email contact comments',query,function(err,data) {
+     mongo.find({},'name email contact comments status',query,function(err,data) {
          // Mongo command to fetch all data from collection.
              if(err) {
                  console.log("err : "+err);
