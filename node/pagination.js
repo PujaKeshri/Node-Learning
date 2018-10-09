@@ -3,9 +3,17 @@ var mongo = require('./mongo.js');
 //var MongoClient = require('mongodb').MongoClient;
 var app = exp();
 
-// Debug code start
+// --------------Debug code start-------------------------->
 const debug = require('debug')('express')
-//Debug code stop
+// --------------Debug code stop--------------------------->
+
+// -------------- filter for cross-origin ------------------>
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+  //  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+  });
+// --------------filter cross-origin-code-stop--------------->
 
 app.get('/enquires',function(req,res){
     var pageNo = parseInt(req.query.pageNo);
@@ -22,11 +30,9 @@ app.get('/enquires',function(req,res){
      mongo.find({},'name email contact comments status',query,function(err,data) {
          // Mongo command to fetch all data from collection.
              if(err) {
-                 console.log("err : "+err);
-                 response = {"error" : true,"message" : "Error fetching data"};
+                 response = {"status" : "Failure","message" : "Error fetching data"};
              } else {
-                 console.log("data : "+data);
-                 response = {"error" : false,"message" : data};
+                 response = data;
              }
              res.json(response);
      });
